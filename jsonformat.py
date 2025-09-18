@@ -18,7 +18,7 @@ class JsonString(JsonNode):
         self.__name = name     
 
     def dump(self, data):
-        result = [self.indent_level_str() + self.__name + "\": \"{value}\""]
+        result = self.indent_level_str() + "\"" + self.__name + "\": \"{value}\""
         return result    
 
 
@@ -62,12 +62,13 @@ class JsonArray(JsonContainer):
 
     def dump(self, data):
         result = [self._start(self.__name, "[")]
-        
+        temp = []
         for item in self._items:
-            result.extend(item.dump(data))
-
+            temp.append(item.dump(data))
+        
+        result.append(",\n".join(temp))
         result.append(self._end("]"))
-        return result
+        return "\n".join(result)
 
     def add_array(self):
         return self._add_array(None)
@@ -85,11 +86,13 @@ class JsonDictionary(JsonContainer):
     def dump(self, data):
         result = [self._start(self.__name, "{")]
         
+        temp = []
         for item in self._items:
-            result.extend(item.dump(data))
-
+            temp.append(item.dump(data))
+        
+        result.append(",\n".join(temp))        
         result.append(self._end("}"))
-        return result
+        return "\n".join(result)
 
     def add_array(self, name):
         return self._add_array(name)
