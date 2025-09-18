@@ -1,6 +1,7 @@
 from datetime import datetime
 import sys
 import json
+import jsonformat
 
 def doit():
     data = []
@@ -121,92 +122,7 @@ class JsonBuilder:
         
     def add_dict(self):
         pass
-        
-
-class JsonNode:
-    def __init__(self, indent=2, indent_level=0):
-        self._indent = indent
-        self._indent_level = indent_level
-
-    def indent_level_str(self):
-        return "".ljust(self._indent_level)
-
-    def dump(self, data):
-        return []
-
-
-class JsonString(JsonNode):
-    def __init__(self, name=None, indent=2, indent_level=0):
-        JsonNode.__init__(self, indent, indent_level)
-        self.__name = name     
-
-    def dump(self, data):
-        result = [self.indent_level_str() + self.__name + "\": \"{value}\""]
-        return result    
-
-
-class JsonContainer(JsonNode):
-    def __init__(self, indent=2, indent_level=2): 
-        JsonNode.__init__(self, indent, indent_level)
-        self._items = [] 
-
-    def _inc_indent_level(self):
-        return self._indent_level+self._indent
-        
-    def _start(self, name, end):
-        if name:
-            return self.indent_level_str() + "\"" + name + "\": " + end
-        else:
-            return self.indent_level_str() + end
-    
-    def _end(self, end):
-        return "".ljust(self._indent_level) + end
-
-    def add_string(self, name):
-        string = JsonString(name, indent_level=self._inc_indent_level())
-        self._items.append(string)
-        return string
-
-    def add_array(self, name):
-        array = JsonArray(name, indent_level=self._inc_indent_level())
-        self._items.append(array)
-        return array
-          
-    def add_dictionary(self, name):
-        dictionary = JsonDictionary(name, indent_level=self._inc_indent_level())
-        self._items.append(dictionary)
-        return dictionary
-    
-    
-class JsonArray(JsonContainer):
-    def __init__(self, name=None, indent=2, indent_level=0):
-        JsonContainer.__init__(self, indent, indent_level)
-        self.__name = name     
-
-    def dump(self, data):
-        result = [self._start(self.__name, "[")]
-        
-        for item in self._items:
-            result.extend(item.dump(data))
-
-        result.append(self._end("]"))
-        return result
-    
-
-class JsonDictionary(JsonContainer):
-    def __init__(self, name=None, indent=2, indent_level=2):
-        JsonContainer.__init__(self, indent, indent_level)
-        self.__name = name
-        
-    def dump(self, data):
-        result = [self._start(self.__name, "{")]
-        
-        for item in self._items:
-            result.extend(item.dump(data))
-
-        result.append(self._end("}"))
-        return result
-        
+                
 
 
 def main():
@@ -215,7 +131,7 @@ def main():
     #with open('data.json', 'r') as file:
     #    data = json.load(file)
     data = []
-    xx = JsonDictionary(indent=4)
+    xx = jsonformat.JsonDictionary(indent=4)
     xx.add_array("activities")
     period = xx.add_dictionary("period")
     period.add_string("name")
