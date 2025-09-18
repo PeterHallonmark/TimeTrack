@@ -74,56 +74,6 @@ class TimeRegister:
         with open(self.__filename, 'w') as file:
             json.dump(self.__data, file, indent=4)
 
-    
-class JsonTree2:
-    def _init__(self, indent=2):
-        self.__indent = indent
-        self.__indent_level = 0
-        self.__keywords = { 
-                "timetrack": self.section
-            }
-
-    def _inc(self, text):
-        result = "".ljust(self.__indent_level) + text
-        self.__indent_level += self.__indent
-        return result
-        
-    def _dec(self, text):
-        self.__indent_level -= self.__indent      
-        return "".ljust(self.__indent_level) + text
-        
-    def out(self, data):
-        result = []
-        #for item in data:
-            #result.extend(self.__keywords[item](item, data[item]))
-        print("\n".join(result)) 
-
-    def section(self, name, data):
-        result = [self.__inc("\"" + name + "\": {")]
-        if type(data) == list:
-            result.extend(self.array(data))
-        result.append(self.__dec("}"))
-        return result
-
-    def array(self, data):
-        result = [self.__inc("[")]
-        print(data)
-        result.append(self.__dec("]"))
-        return result
-
-
-        
-class JsonBuilder:
-    def __init__(self):
-        pass
-        
-    def add_array(self):
-        pass
-        
-    def add_dict(self):
-        pass
-                
-
 
 def main():
     #json = JsonTree()
@@ -138,8 +88,10 @@ def main():
     period.add_string("start")
     period.add_string("end")
     
-    xx.add_array("weeks")
-    
+    weeks = xx.add_array("weeks")
+    week = weeks.add_dictionary()
+    week.add_string("week")
+
     print("\n".join(xx.dump(data)))
     #tr = TimeRegister("data.json")
     #tr.start_activity()
