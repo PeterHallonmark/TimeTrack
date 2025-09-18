@@ -91,8 +91,14 @@ def main():
     weeks = xx.add_array("weeks")
     week = weeks.add_dictionary()
     week.add_string("week")
-
-    print("\n".join(xx.dump(data)))
+    
+    timetrack = week.add_array("timetrack")
+    x = timetrack.add_dictionary()
+    x.add_string("start")
+    x.add_string("end")
+    x.add_string("activity")
+    
+    print(xx.dump(data))
     #tr = TimeRegister("data.json")
     #tr.start_activity()
     #tr.store()

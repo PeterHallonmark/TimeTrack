@@ -65,8 +65,10 @@ class JsonArray(JsonContainer):
         temp = []
         for item in self._items:
             temp.append(item.dump(data))
+
+        if len(temp) > 0:
+            result.append(",\n".join(temp))
         
-        result.append(",\n".join(temp))
         result.append(self._end("]"))
         return "\n".join(result)
 
