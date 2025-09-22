@@ -5,8 +5,8 @@ class JsonNode:
         self._indent = indent
         self._indent_level = indent_level
 
-    def indent_level_str(self):
-        return "".ljust(self._indent_level)
+    def _indent_str(self):
+        return "".ljust(self._indent)
 
     def dump(self, data):
         return []
@@ -18,7 +18,7 @@ class JsonString(JsonNode):
         self.__name = name     
 
     def dump(self, data):
-        result = self.indent_level_str() + "\"" + self.__name + "\": \"{value}\""
+        result = "\"" + self.__name + "\": \"{value}\""
         return result    
 
 
@@ -32,12 +32,25 @@ class JsonContainer(JsonNode):
         
     def _start(self, name, end):
         if name:
-            return self.indent_level_str() + "\"" + name + "\": " + end
+            return "\"" + name + "\": " + end
         else:
-            return self.indent_level_str() + end
+            return end
     
     def _end(self, end):
-        return "".ljust(self._indent_level) + end
+        return end
+
+    def _get_items(self, data):
+        temp = []
+        result = []
+        for item in self._items:
+            temp.append(item.dump(data))
+
+        if len(temp) > 0:
+            result.append(",\n".join(temp))
+        else:
+            # Handle no items.
+            result.append("\n")    
+        return result
 
     def add_string(self, name):
         string = JsonString(name, indent_level=self._inc_indent_level())
@@ -68,9 +81,12 @@ class JsonArray(JsonContainer):
 
         if len(temp) > 0:
             result.append(",\n".join(temp))
+        else:
+            # Handle no items.
+            result.append("\n")
         
         result.append(self._end("]"))
-        return "\n".join(result)
+        return self._indent_str() + self._indent_str().join(result)
 
     def add_array(self):
         return self._add_array(None)
@@ -88,11 +104,9 @@ class JsonDictionary(JsonContainer):
     def dump(self, data):
         result = [self._start(self.__name, "{")]
         
-        temp = []
-        for item in self._items:
-            temp.append(item.dump(data))
-        
-        result.append(",\n".join(temp))        
+        #print(self.indent_level_str() + str(self.__name) + " " + str(len(self._items)))
+        result.extend(self._get_items(data))
+            
         result.append(self._end("}"))
         return "\n".join(result)
 

@@ -1,3 +1,5 @@
+
+
 import argparse
 from datetime import datetime, timedelta
 import json
@@ -6,6 +8,7 @@ import sys
 
 TIMEDELTA_END_OF_DAY = timedelta(hours=23, minutes=59, seconds=59)
 TIMEDELTA_ZERO = timedelta(0)
+
 
 class ActivityHeader:
     def __init__(self, name):
@@ -384,20 +387,27 @@ class TimeTrackerCalculateVisitor:
     
     def visit_day(self, day):
         self.__activity_summary = TIMEDELTA_ZERO
+        self.__activity_list = []
         self.__away_summary = TIMEDELTA_ZERO
+        self.__away_list = []
         
+        print(day)
         for activity in day:
             activity.accept(self)
+        print(self.__activity_list)
         print(self.__activity_summary)
+        print(day)
         
     def visit_activity_header(self, header):
         pass
 
     def visit_activity(self, activity):
+        self.__activity_list.append(activity)
         self.__activity_summary  += activity.duration()
         
     def visit_away(self, away):
         if away.name not in self.__ignore_away:
+            self.__activity_list.append(away)
             self.__away_summary  += away.duration()
    
     def ignore_away(self, ignore):

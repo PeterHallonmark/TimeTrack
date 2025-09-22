@@ -1,3 +1,4 @@
+
 from datetime import datetime
 import sys
 import json
@@ -81,22 +82,22 @@ def main():
     #with open('data.json', 'r') as file:
     #    data = json.load(file)
     data = []
-    xx = jsonformat.JsonDictionary(indent=4)
+    xx = jsonformat.JsonDictionary(indent=2)
     xx.add_array("activities")
-    period = xx.add_dictionary("period")
+    period = xx.add_array("period")
     period.add_string("name")
     period.add_string("start")
     period.add_string("end")
     
-    weeks = xx.add_array("weeks")
-    week = weeks.add_dictionary()
-    week.add_string("week")
+    #weeks = xx.add_array("weeks")
+    #week = weeks.add_dictionary()
+    #week.add_string("week")
     
-    timetrack = week.add_array("timetrack")
-    x = timetrack.add_dictionary()
-    x.add_string("start")
-    x.add_string("end")
-    x.add_string("activity")
+    #timetrack = week.add_array("timetrack")
+    #x = timetrack.add_dictionary()
+    #x.add_string("start")
+    #x.add_string("end")
+    #x.add_string("activity")
     
     print(xx.dump(data))
     #tr = TimeRegister("data.json")
