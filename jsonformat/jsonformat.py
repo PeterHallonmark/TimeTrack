@@ -1,6 +1,6 @@
 
 
-class JsonNode:
+class JSONNode:
     def __init__(self, indent=2):
         self._indent = indent
 
@@ -11,9 +11,9 @@ class JsonNode:
         return []
 
 
-class JsonString(JsonNode):
+class JSONString(JSONNode):
     def __init__(self, name=None, indent=2):
-        JsonNode.__init__(self, indent)
+        JSONNode.__init__(self, indent)
         self.__name = name
 
     def dump(self, data):
@@ -21,9 +21,9 @@ class JsonString(JsonNode):
         return result
 
 
-class JsonContainer(JsonNode):
+class JSONContainer(JSONNode):
     def __init__(self, indent=2):
-        JsonNode.__init__(self, indent)
+        JSONNode.__init__(self, indent)
         self._items = []
 
     def _inc_indent_level(self):
@@ -52,24 +52,24 @@ class JsonContainer(JsonNode):
         return result
 
     def add_string(self, name):
-        string = JsonString(name)
+        string = JSONString(name)
         self._items.append(string)
         return string
 
     def _add_array(self, name):
-        array = JsonArray(name)
+        array = JSONArray(name)
         self._items.append(array)
         return array
 
     def _add_dictionary(self, name):
-        dictionary = JsonDictionary(name)
+        dictionary = JSONDictionary(name)
         self._items.append(dictionary)
         return dictionary
 
 
-class JsonArray(JsonContainer):
+class JSONArray(JSONContainer):
     def __init__(self, name=None, indent=2):
-        JsonContainer.__init__(self, indent)
+        JSONContainer.__init__(self, indent)
         self.__name = name
 
     def dump(self, data):
@@ -94,9 +94,9 @@ class JsonArray(JsonContainer):
         return self._add_dictionary(None)
 
 
-class JsonDictionary(JsonContainer):
+class JSONDictionary(JSONContainer):
     def __init__(self, name=None, indent=2):
-        JsonContainer.__init__(self, indent)
+        JSONContainer.__init__(self, indent)
         self.__name = name
 
     def _build(self, builder):

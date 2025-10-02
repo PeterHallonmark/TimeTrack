@@ -47,7 +47,7 @@ class TimeRegister:
     def __read_json(self, filename):
         try:
             with open(filename, 'r') as file:
-                return json.load(file)
+                return JSON.load(file)
         except:
             return []
 
@@ -78,30 +78,30 @@ class TimeRegister:
 
 
 def main():
-    #json = JsonTree()
+    #JSON = JSONTree()
     
-    #with open('data.json', 'r') as file:
-    #    data = json.load(file)
+    #with open('data.JSON', 'r') as file:
+    #    data = JSON.load(file)
     data = []
-    xx = jsonformat.JsonDictionary(indent=2)
+    xx = jsonformat.JSONDictionary(indent=2)
     xx.add_array("activities")
     period = xx.add_array("period")
     period.add_string("name")
     period.add_string("start")
     period.add_string("end")
     
-    #weeks = xx.add_array("weeks")
-    #week = weeks.add_dictionary()
-    #week.add_string("week")
+    weeks = xx.add_array("weeks")
+    week = weeks.add_dictionary()
+    week.add_string("week")
     
-    #timetrack = week.add_array("timetrack")
-    #x = timetrack.add_dictionary()
-    #x.add_string("start")
-    #x.add_string("end")
-    #x.add_string("activity")
+    timetrack = week.add_array("timetrack")
+    x = timetrack.add_dictionary()
+    x.add_string("start")
+    x.add_string("end")
+    x.add_string("activity")
     
-    print(xx.dump(data))
-    #tr = TimeRegister("data.json")
+    print(xx.dump(None))
+    #tr = TimeRegister("data.JSON")
     #tr.start_activity()
     #tr.store()
     
@@ -116,7 +116,7 @@ def main():
     
     
     
-    #x = JsonTree()
+    #x = JSONTree()
     #x.out(data)
 
     
