@@ -19,6 +19,9 @@ class JSONString(JSONNode):
         JSONNode.__init__(self, name, indent)
         self.__name = name
 
+    def accept(self, visitor):
+        visitor.visit_string(self)
+
 
 class JSONContainer(JSONNode):
     def __init__(self, name=None, indent=2):
@@ -92,14 +95,17 @@ class JSONBuilder:
         self.__result = []
         self.__indentation = IndentationLevel()
 
+    def __handle_items(self, container):
+        self.__indentation.inc()
+        container.accept_items(self)
+        self.__indentation.dec()
+  
     def visit_dictionary(self, dictionary):
         if dictionary.name is not None:
             self.__result.append(f"{self.__indentation}{dictionary.name}: {{")
         else:
             self.__result.append(f"{self.__indentation}{{")
-        self.__indentation.inc()
-        dictionary.accept_items(self)
-        self.__indentation.dec()
+        self.__handle_items(dictionary)
         self.__result.append(f"{self.__indentation}}}")
 
     def visit_array(self, array):
@@ -107,13 +113,14 @@ class JSONBuilder:
             self.__result.append(f"{self.__indentation}{array.name}: [")
         else:
             self.__result.append(f"{self.__indentation}[")
-        self.__indentation.inc()
-        array.accept_items(self)
-        self.__indentation.dec()
+        self.__handle_items(array)
         self.__result.append(f"{self.__indentation}]")
 
     def get_result(self):
         return "\n".join(self.__result)
+
+    def visit_string(self, string):
+        self.__result.append(f"{self.__indentation}{string.name}: <value>")    
 
     def visit_node(self, node):
         self.__result.append(f"{self.__indentation}{node.name}")
